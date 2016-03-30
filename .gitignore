@@ -1,0 +1,6 @@
+Library/metadata/
+Library/ShaderCache/
+*.sln
+Temp/
+Assets/*
+!Assets/Scripts
