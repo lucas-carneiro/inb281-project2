@@ -23,8 +23,8 @@ At the end of this activity it is expected that you have experimented with the s
     - Spider has a total amount of health / life
     - Spider takes damage as a result of some event (eg. being jumped on)
     - Spider is removed from the scene upon losing all health
-- A timer that displays how long the player has been in the current game
-- Display the current time elapsed since starting the game on the screen as part of your Heads Up Display (HUD)
+- (DONE) A timer that displays how long the player has been in the current game
+- (DONE) Display the current time elapsed since starting the game on the screen as part of your Heads Up Display (HUD)
 
 ##### Suggestions (non-deliverable but useful):
 
