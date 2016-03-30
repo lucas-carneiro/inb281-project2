@@ -14,7 +14,19 @@ public class TimeBar : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         time += Time.deltaTime;
-        //Time using format Minutes:Seconds:Milliseconds
-        timeText.text = "" + Mathf.FloorToInt(time / 60) + ":" + Mathf.Round(time) + ":" +  time.ToString("F2").Split('.')[1];
+
+        //Time using Minutes:Seconds:Milliseconds
+        string m = format(Mathf.FloorToInt(time / 60).ToString());
+        string s = format((Mathf.Floor(time) % 60).ToString());
+        string ms = time.ToString("F2").Split('.')[1];
+
+        timeText.text = m + ":" + s + ":" +  ms;
+    }
+
+    string format(string s) {
+        if (s.Length < 2) {
+            s = "0" + s;
+        }
+        return s;
     }
 }

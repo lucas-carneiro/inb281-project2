@@ -4,4 +4,5 @@ Library/ShaderCache/
 Temp/
 Assets/*
 !Assets/Scripts
+!Assets/*.unity
 *.meta
