@@ -29,7 +29,7 @@ public class PlayerAnimations : MonoBehaviour {
 		Quaternion newRotation = playerModel.transform.rotation;
 
 		//Play Animations
-		if (player.CheckGrounded () == true && Input.GetKey ("d") || player.CheckGrounded () == true && Input.GetKey ("a")) {
+		if (player.CheckGrounded () == true && (Input.GetKey(player.rightKey) || Input.GetKey(player.rightKey2)) || player.CheckGrounded () == true && (Input.GetKey(player.leftKey) || Input.GetKey(player.leftKey2))) {
 			GetComponent<Animation>().Play ("run");
 		} else if (player.CheckGrounded () == false) {
 			GetComponent<Animation>().Play ("charge");
@@ -38,11 +38,11 @@ public class PlayerAnimations : MonoBehaviour {
 		}
 
 		//Fix Player Mesh Transform Rotation
-		if (Input.GetKeyDown ("d")) {
+		if ((Input.GetKey(player.rightKey) || Input.GetKey(player.rightKey2))) {
 			newRotation.eulerAngles = new Vector3(newRotation.eulerAngles.x, 90, newRotation.eulerAngles.z);
 			playerModel.transform.rotation = newRotation;
 			
-		} else if (Input.GetKeyDown ("a")) {
+		} else if ((Input.GetKey(player.leftKey) || Input.GetKey(player.leftKey2))) {
 			newRotation.eulerAngles = new Vector3(newRotation.eulerAngles.x, -90, newRotation.eulerAngles.z);
 			playerModel.transform.rotation = newRotation;
 		}

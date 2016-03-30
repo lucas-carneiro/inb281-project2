@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class RestartLevel : MonoBehaviour {
 
@@ -16,7 +16,7 @@ public class RestartLevel : MonoBehaviour {
 	//Restart level if "Player" tagged object collides with this object
 	void OnCollisionEnter(Collision otherObject){
 		if(otherObject.gameObject.tag == "Player"){
-			Application.LoadLevel(Application.loadedLevel);
-		}
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
 	}
 }
