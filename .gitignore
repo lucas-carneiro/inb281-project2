@@ -4,3 +4,4 @@ Library/ShaderCache/
 Temp/
 Assets/*
 !Assets/Scripts
+*.meta
