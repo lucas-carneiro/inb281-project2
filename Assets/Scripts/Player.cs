@@ -15,6 +15,10 @@ public class Player : MonoBehaviour {
     public float maxHP = 5f;
     private float currentHP;
 
+    public float jumpCooldown = 0.1f;
+    private bool inCooldown;
+    private float cooldownRemaining;
+
     //Object that represents HP
     public GameObject HP;
 
@@ -77,12 +81,23 @@ public class Player : MonoBehaviour {
         //Move Left
         if (Input.GetKey(leftKey) || Input.GetKey(leftKey2)) {
             myTransform.Translate(-walkSpeed * Time.deltaTime, 0f, 0f);
-		}
+		}        
 
-		//Jumping
-		if ((Input.GetKey(jumpKey) || Input.GetKey(jumpKey2)) && CheckGrounded()) {
-			myTransform.GetComponent<Rigidbody>().AddForce (0,jumpForce,0);
-		}
+        if (inCooldown) {
+            cooldownRemaining -= jumpCooldown * Time.deltaTime;
+            inCooldown = cooldownRemaining > 0f;
+            if (!inCooldown) {
+                cooldownRemaining = 0f;
+            }
+        }
+        else {
+            //Jumping
+            if ((Input.GetKey(jumpKey) || Input.GetKey(jumpKey2)) && CheckGrounded()) {
+                myTransform.GetComponent<Rigidbody>().AddForce(0, jumpForce, 0);
+                inCooldown = true;
+                cooldownRemaining = jumpCooldown;
+            }
+        }
 	}
 
 	//Raycast down to check if grounded
