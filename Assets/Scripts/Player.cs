@@ -8,6 +8,7 @@ public class Player : MonoBehaviour {
 	public float walkSpeed = 5.0f;
 	public float jumpForce = 350.0f;
 	private float distToGround;
+    private bool oneJump;
 
 	public GameObject model;
 
@@ -15,11 +16,11 @@ public class Player : MonoBehaviour {
 	void Start () {
 		myTransform = this.transform;
 		distToGround = myTransform.GetComponent<Collider>().bounds.extents.y;
+        oneJump = false;
 	}
 	
 	// Update is called once per frame
-	void Update () {
-			
+	void Update () {			
 		Controls ();
 	}
 
@@ -36,8 +37,9 @@ public class Player : MonoBehaviour {
 		}
 
 		//Jumping
-		if (Input.GetKeyDown ("space") && CheckGrounded() == true) {
+		if (Input.GetKeyDown ("space") && (CheckGrounded() || oneJump)) {
 			myTransform.GetComponent<Rigidbody>().AddForce (0,jumpForce,0);
+            oneJump = !oneJump;
 		}
 	}
 
