@@ -46,7 +46,7 @@ public class Spider : MonoBehaviour {
 
     //Called by external game objects
     public void Act() {
-        TakeDamage(maxHP / 2);
+        TakeDamage(maxHP / 4);
     }
 
     void TakeDamage(float damage) {
