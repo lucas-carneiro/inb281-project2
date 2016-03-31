@@ -17,7 +17,7 @@ At the end of this activity it is expected that you have experimented with the s
 - A Level Design that displays a goal (i.e. objective or purpose in the game) and loss condition (i.e. losing the game through some means)
 - Two ends states
     - A goal (i.e. objective or purpose in the game) as described in the level design
-    - A loss condition (i.e. how the player loses the game)
+    - (DONE) A loss condition (i.e. how the player loses the game)
 - (DONE) A death animation on the player
 - (DONE) A combat mechanic so that the spiders can be defeated
     - (DONE) Spider has a total amount of health / life
