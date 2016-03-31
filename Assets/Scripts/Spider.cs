@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Spider : MonoBehaviour {
 
@@ -12,15 +11,20 @@ public class Spider : MonoBehaviour {
 	private int currentPatrolPoint = 0;
 	public float patrolPointDistance = 1.0f;
 
-	// Use this for initialization
-	void Start () {
+    public enum Status { walk, taunt, attack, hit, death };
+    public Status currentStatus;
+
+    // Use this for initialization
+    void Start () {
 		myTransform = this.transform;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		Patrol ();
-	}
+        //Play animation
+        GetComponent<Animation>().Play(currentStatus.ToString());
+    }
 
 	//Spider Action - Patrol between provided points
 	void Patrol(){
@@ -31,8 +35,8 @@ public class Spider : MonoBehaviour {
 		//Move in direction of patrol point
 		myTransform.Translate(Vector3.forward * Time.deltaTime * moveSpeed);
 
-		//Play walk animation
-		GetComponent<Animation>().Play ("walk");
+        //Walk
+        currentStatus = Status.walk;
 
 		//Close to/arrived at patrol point. Switch to next/first patrol point
 		if (Vector3.Distance (myTransform.position, patrolPoints[currentPatrolPoint].transform.position) < patrolPointDistance) {
