@@ -19,10 +19,10 @@ At the end of this activity it is expected that you have experimented with the s
     - A goal (i.e. objective or purpose in the game) as described in the level design
     - A loss condition (i.e. how the player loses the game)
 - (DONE) A death animation on the player
-- A combat mechanic so that the spiders can be defeated
-    - Spider has a total amount of health / life
-    - Spider takes damage as a result of some event (eg. being jumped on)
-    - Spider is removed from the scene upon losing all health
+- (DONE) A combat mechanic so that the spiders can be defeated
+    - (DONE) Spider has a total amount of health / life
+    - (DONE) Spider takes damage as a result of some event (eg. being jumped on)
+    - (DONE) Spider is removed from the scene upon losing all health
 - (DONE) A timer that displays how long the player has been in the current game
 - (DONE) Display the current time elapsed since starting the game on the screen as part of your Heads Up Display (HUD)
 

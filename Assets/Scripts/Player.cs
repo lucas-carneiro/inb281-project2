@@ -16,7 +16,7 @@ public class Player : MonoBehaviour {
 
 	public GameObject model;
 
-    public float maxHP = 5f;
+    public float maxHP = 50f;
     private float currentHP;
 
     public float jumpCooldown = 0.1f;
@@ -141,20 +141,20 @@ public class Player : MonoBehaviour {
     void OnTriggerEnter(Collider collidingObject) {
         //If collidingObject is an action object
         if (collidingObject.gameObject.tag == "Action") {
-            ActionText.text = "" +
-                //Possible action texts, from external object classes
-                //collidingObject.gameObject.GetComponent<Turret>() +
-                //collidingObject.gameObject.GetComponent<EmergencyGlass>() +
-                //collidingObject.gameObject.GetComponent<EmergencyStop>() +
-                " " + actionKey;
-            ActionText.gameObject.SetActive(true);
+            //ActionText.text = "" +
+            //    Possible action texts, from external object classes
+            //    collidingObject.gameObject.GetComponent<Turret>() +
+            //    collidingObject.gameObject.GetComponent<EmergencyGlass>() +
+            //    collidingObject.gameObject.GetComponent<EmergencyStop>() +
+            //    " " + actionKey;
+            //ActionText.gameObject.SetActive(true);
         }
     }
     void OnTriggerStay(Collider collidingObject) {
         //If collidingObject is an action object
         if (collidingObject.gameObject.tag == "Action") {
             if (Input.GetKeyDown(actionKey)) {
-                ActionText.gameObject.SetActive(false);
+                //ActionText.gameObject.SetActive(false);
                 collidingObject.gameObject.SendMessage("Act", SendMessageOptions.DontRequireReceiver);
             }
         }
@@ -162,7 +162,7 @@ public class Player : MonoBehaviour {
     void OnTriggerExit(Collider collidingObject) {
         //If collidingObject is an action object
         if (collidingObject.gameObject.tag == "Action") {
-            ActionText.gameObject.SetActive(false);
+            //ActionText.gameObject.SetActive(false);
         }
     }
 

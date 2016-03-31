@@ -11,23 +11,58 @@ public class Spider : MonoBehaviour {
 	private int currentPatrolPoint = 0;
 	public float patrolPointDistance = 1.0f;
 
-    public enum Status { walk, taunt, attack, hit, death };
+    public float maxHP = 20f;
+    private float currentHP;
+    private bool isDead;
+
+    public enum Status { walk, taunt, attack, hit, die };
     public Status currentStatus;
 
     // Use this for initialization
     void Start () {
 		myTransform = this.transform;
-	}
+        currentHP = maxHP;
+        isDead = false;
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		Patrol ();
+        if (!GetComponent<Animation>().IsPlaying(Status.die.ToString())) {
+            if (!GetComponent<Animation>().IsPlaying(Status.attack.ToString()) &&
+                !GetComponent<Animation>().IsPlaying(Status.hit.ToString())) {
+                Patrol();
+
+                //Play animation
+                GetComponent<Animation>().Play(currentStatus.ToString());
+            }
+        }
+        else {
+            AnimationState state = GetComponent<Animation>()["die"];
+            if (state.time > state.length) {
+                Destroy(myTransform.parent.gameObject);
+            }
+        }
+    }
+
+    //Called by external game objects
+    public void Act() {
+        TakeDamage(maxHP / 2);
+    }
+
+    void TakeDamage(float damage) {
+        currentHP -= damage;
+        if (currentHP <= 0) {
+            currentStatus = Status.die;
+        }
+        else {
+            currentStatus = Status.hit;
+        }
         //Play animation
         GetComponent<Animation>().Play(currentStatus.ToString());
     }
 
-	//Spider Action - Patrol between provided points
-	void Patrol(){
+    //Spider Action - Patrol between provided points
+    void Patrol(){
 
 		//Snap rotate towards current patrol point
 		myTransform.LookAt (patrolPoints [currentPatrolPoint].transform.position);
