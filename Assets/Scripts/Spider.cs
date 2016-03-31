@@ -13,25 +13,39 @@ public class Spider : MonoBehaviour {
 
     public float maxHP = 20f;
     private float currentHP;
-    private bool isDead;
+    public float damage = 10f;
+    public float attackCooldown = 1f;
+    private bool inCooldown = false;
+    private float cooldownRemaining = 0f;
 
     public enum Status { walk, taunt, attack, hit, die };
     public Status currentStatus;
+
+    public float range = 10f;
+    public GameObject raycaster;
 
     // Use this for initialization
     void Start () {
 		myTransform = this.transform;
         currentHP = maxHP;
-        isDead = false;
     }
 	
 	// Update is called once per frame
 	void Update () {
+        if (inCooldown) {
+            cooldownRemaining -= attackCooldown * Time.deltaTime;
+            inCooldown = cooldownRemaining > 0f;
+        }
+
         if (!GetComponent<Animation>().IsPlaying(Status.die.ToString())) {
             if (!GetComponent<Animation>().IsPlaying(Status.attack.ToString()) &&
                 !GetComponent<Animation>().IsPlaying(Status.hit.ToString())) {
-                Patrol();
-
+                if (aimEnemy()) {
+                    currentStatus = Status.taunt;
+                }
+                else {
+                    Patrol();
+                }
                 //Play animation
                 GetComponent<Animation>().Play(currentStatus.ToString());
             }
@@ -41,6 +55,43 @@ public class Spider : MonoBehaviour {
             if (state.time > state.length) {
                 Destroy(myTransform.parent.gameObject);
             }
+        }
+    }
+
+    bool aimEnemy() {
+        //Raycast Detection
+        RaycastHit hit;
+        Vector3 aim = new Vector3(Mathf.Sign(transform.rotation.y), 0, 0);
+
+        if (Physics.Raycast(raycaster.transform.position, aim, out hit, range)) {
+
+            //If hit has "Player" tag...
+            if (hit.transform.tag == "Player") {
+                //Draw red debug line
+                Debug.DrawLine(raycaster.transform.position, hit.point, Color.red);
+                return true;
+            }
+            else {
+                //Draw green debug line
+                Debug.DrawLine(raycaster.transform.position, hit.point, Color.green);
+            }
+        }
+
+        return false;
+    }
+
+    void Attack(GameObject enemy) {
+        currentStatus = Status.attack;
+        inCooldown = true;
+        cooldownRemaining = attackCooldown;
+        GetComponent<Animation>().Play(currentStatus.ToString());
+        enemy.SendMessage("TakeDamage", damage, SendMessageOptions.DontRequireReceiver);
+    }
+
+    void OnTriggerStay(Collider collidingObject) {
+        //If collidingObject is an action object
+        if (collidingObject.gameObject.tag == "Player" && !inCooldown && currentStatus != Status.die && currentStatus != Status.hit) {
+            Attack(collidingObject.gameObject);
         }
     }
 

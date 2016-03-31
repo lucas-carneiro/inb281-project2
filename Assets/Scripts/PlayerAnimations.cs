@@ -2,8 +2,6 @@
 using UnityEngine.SceneManagement;
 
 public class PlayerAnimations : MonoBehaviour {
-
-	private Transform myTransform;
 	
 	//Animation Variables & Settings
 	public float jumpAnimationSpeed = 0.25f;
@@ -14,7 +12,6 @@ public class PlayerAnimations : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		myTransform = this.transform;
         isDead = false;
 		
 		player= GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
@@ -33,9 +30,12 @@ public class PlayerAnimations : MonoBehaviour {
         if (!GetComponent<Animation>().IsPlaying(Player.Status.die.ToString())) {
             if (isDead) {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                return;
             }
             if (!GetComponent<Animation>().IsPlaying(Player.Status.attack.ToString())) {
-                player.Controls();
+                if (player.currentStatus != Player.Status.die) {
+                    player.Controls();
+                }
                 GetComponent<Animation>().Play(player.currentStatus.ToString());
 
                 //Fix Player Mesh Transform Rotation

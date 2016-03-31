@@ -26,7 +26,7 @@ public class Player : MonoBehaviour {
     private float cooldownRemaining;
 
     //Object that represents HP
-    public GameObject HP;
+    public Slider HP;
 
     //Object that represents an image which appears when the player loses health
     public Image damageImage;
@@ -168,9 +168,11 @@ public class Player : MonoBehaviour {
 
     //Called by external game objects
     void TakeDamage(float damage) {
-        currentHP -= damage;
-        HP.transform.localScale = new Vector3(currentHP / maxHP, 1f, 1f);
-        damageImage.color = new Vector4(damageColor.r, damageColor.g, damageColor.b, 1f);
+        if (currentStatus != Status.die) {
+            currentHP -= damage;
+            HP.value = currentHP / maxHP;
+            damageImage.color = new Vector4(damageColor.r, damageColor.g, damageColor.b, 1f);
+        }
     }
 
     //Called by external game objects
@@ -189,10 +191,10 @@ public class Player : MonoBehaviour {
 
     public void lose() {
         currentStatus = Status.die;
-        ActionText.text = "You died! Maybe someone else will stop the machines... Press " + restartKey + " to play again.";
-        ActionText.gameObject.SetActive(true);
-        AudioSource.PlayClipAtPoint(loseSound, transform.position);
-        Time.timeScale = 0f;
+        //Actiontext.text = "you died! maybe someone else will stop the machines... press " + restartkey + " to play again.";
+        //actiontext.gameobject.setactive(true);
+        //audiosource.playclipatpoint(losesound, transform.position);
+        //time.timeScale = 0f;
     }
 
     //Platform parenting - Keep player parented to moving platforms
