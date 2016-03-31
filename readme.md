@@ -18,7 +18,7 @@ At the end of this activity it is expected that you have experimented with the s
 - Two ends states
     - A goal (i.e. objective or purpose in the game) as described in the level design
     - A loss condition (i.e. how the player loses the game)
-- A death animation on the player
+- (DONE) A death animation on the player
 - A combat mechanic so that the spiders can be defeated
     - Spider has a total amount of health / life
     - Spider takes damage as a result of some event (eg. being jumped on)
