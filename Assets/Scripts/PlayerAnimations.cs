@@ -28,14 +28,11 @@ public class PlayerAnimations : MonoBehaviour {
 		
 		Quaternion newRotation = playerModel.transform.rotation;
 
-		//Play Animations
-		if (player.CheckGrounded () == true && (Input.GetKey(player.rightKey) || Input.GetKey(player.rightKey2)) || player.CheckGrounded () == true && (Input.GetKey(player.leftKey) || Input.GetKey(player.leftKey2))) {
-			GetComponent<Animation>().Play ("run");
-		} else if (player.CheckGrounded () == false) {
-			GetComponent<Animation>().Play ("charge");
-		} else {
-			GetComponent<Animation>().Play ("idle");
-		}
+        //Play animations if no actions are being made
+        if (!GetComponent<Animation>().IsPlaying(Player.Status.attack.ToString())) {
+            player.Controls();
+            GetComponent<Animation>().Play(player.currentStatus.ToString());
+        }
 
 		//Fix Player Mesh Transform Rotation
 		if ((Input.GetKey(player.rightKey) || Input.GetKey(player.rightKey2))) {

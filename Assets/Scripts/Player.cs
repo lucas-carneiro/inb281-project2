@@ -4,6 +4,10 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour {
 
+    //Player animation status
+    public enum Status {idle, walk, run, charge, attack, idlebattle, die};
+    public Status currentStatus;
+
 	private Transform myTransform;
 
 	public float walkSpeed = 5.0f;
@@ -16,6 +20,8 @@ public class Player : MonoBehaviour {
     private float currentHP;
 
     public float jumpCooldown = 0.1f;
+    public float attackCooldown = 0.1f;
+    private bool hasAttacked;
     private bool inCooldown;
     private float cooldownRemaining;
 
@@ -34,6 +40,8 @@ public class Player : MonoBehaviour {
     public KeyCode rightKey2 = KeyCode.D;
     public KeyCode jumpKey = KeyCode.UpArrow;
     public KeyCode jumpKey2 = KeyCode.Space;
+    public KeyCode attackKey = KeyCode.C;
+    public KeyCode attackKey2 = KeyCode.DownArrow;
 
     //Action variables
     public KeyCode actionKey = KeyCode.Alpha1;
@@ -51,6 +59,8 @@ public class Player : MonoBehaviour {
 		distToGround = myTransform.GetComponent<Collider>().bounds.extents.y;
         currentHP = maxHP;
         damageColor.a = 0;
+        inCooldown = false;
+        hasAttacked = false;
     }
 	
 	// Update is called once per frame
@@ -58,8 +68,6 @@ public class Player : MonoBehaviour {
         if (currentHP <= 0) {
             lose();
         }
-
-        Controls();
 
         //Fade damageImage
         if (damageImage.color.a > 0f) {
@@ -72,14 +80,28 @@ public class Player : MonoBehaviour {
         }
 	}
 
-	void Controls(){
+    //Called inside PlayerAnimations
+    //Reason: Controls do not work while an action is happening
+	public void Controls(){
+        //Idle
+        if (hasAttacked) {
+            currentStatus = Status.idlebattle;
+        }
+        else {
+            currentStatus = Status.idle;
+        }
+
 		//Move Right
 		if (Input.GetKey(rightKey) || Input.GetKey(rightKey2)) {
+            currentStatus = Status.run;
+            hasAttacked = false;
 			myTransform.Translate(walkSpeed * Time.deltaTime, 0f, 0f);
 		}
 
         //Move Left
         if (Input.GetKey(leftKey) || Input.GetKey(leftKey2)) {
+            currentStatus = Status.run;
+            hasAttacked = false;
             myTransform.Translate(-walkSpeed * Time.deltaTime, 0f, 0f);
 		}        
 
@@ -90,13 +112,23 @@ public class Player : MonoBehaviour {
                 cooldownRemaining = 0f;
             }
         }
-        else {
-            //Jumping
-            if ((Input.GetKey(jumpKey) || Input.GetKey(jumpKey2)) && CheckGrounded()) {
+        else if (CheckGrounded()){
+            //Jump
+            if (Input.GetKey(jumpKey) || Input.GetKey(jumpKey2)) {
+                hasAttacked = false;
                 myTransform.GetComponent<Rigidbody>().AddForce(0, jumpForce, 0);
                 inCooldown = true;
                 cooldownRemaining = jumpCooldown;
             }
+            //Attack
+            if (Input.GetKey(attackKey) || Input.GetKey(attackKey2)) {
+                currentStatus = Status.attack;
+                hasAttacked = true;
+            }
+        }
+
+        if (!CheckGrounded()) {
+            currentStatus = Status.charge;
         }
 	}
 
@@ -156,6 +188,7 @@ public class Player : MonoBehaviour {
     }
 
     public void lose() {
+        currentStatus = Status.die;
         ActionText.text = "You died! Maybe someone else will stop the machines... Press " + restartKey + " to play again.";
         ActionText.gameObject.SetActive(true);
         AudioSource.PlayClipAtPoint(loseSound, transform.position);
