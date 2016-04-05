@@ -14,9 +14,9 @@ Play around with the provided game mechanics to get a feel for how the game work
 
 ##### Deliverable:
 At the end of this activity it is expected that you have experimented with the software and your version of the game has the following elements:
-- A Level Design that displays a goal (i.e. objective or purpose in the game) and loss condition (i.e. losing the game through some means)
-- Two ends states
-    - A goal (i.e. objective or purpose in the game) as described in the level design
+- (DONE) A Level Design that displays a goal (i.e. objective or purpose in the game) and loss condition (i.e. losing the game through some means)
+- (DONE) Two ends states
+    - (DONE) A goal (i.e. objective or purpose in the game) as described in the level design
     - (DONE) A loss condition (i.e. how the player loses the game)
 - (DONE) A death animation on the player
 - (DONE) A combat mechanic so that the spiders can be defeated
