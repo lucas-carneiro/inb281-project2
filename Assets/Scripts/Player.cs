@@ -136,32 +136,12 @@ public class Player : MonoBehaviour {
 		return Physics.Raycast(myTransform.position, -Vector3.up, distToGround + 0.1f);
 	}
 
-    //Interaction between player and objects
-    void OnTriggerEnter(Collider collidingObject) {
-        //If collidingObject is an action object
-        if (collidingObject.gameObject.tag == "Action") {
-            //ActionText.text = "" +
-            //    Possible action texts, from external object classes
-            //    collidingObject.gameObject.GetComponent<Turret>() +
-            //    collidingObject.gameObject.GetComponent<EmergencyGlass>() +
-            //    collidingObject.gameObject.GetComponent<EmergencyStop>() +
-            //    " " + actionKey;
-            //ActionText.gameObject.SetActive(true);
-        }
-    }
     void OnTriggerStay(Collider collidingObject) {
         //If collidingObject is an action object
-        if (collidingObject.gameObject.tag == "Action") {
+        if (currentStatus == Status.attack && collidingObject.gameObject.tag == "Action") {
             if (Input.GetKeyDown(actionKey)) {
-                //ActionText.gameObject.SetActive(false);
                 collidingObject.gameObject.SendMessage("Act", SendMessageOptions.DontRequireReceiver);
             }
-        }
-    }
-    void OnTriggerExit(Collider collidingObject) {
-        //If collidingObject is an action object
-        if (collidingObject.gameObject.tag == "Action") {
-            //ActionText.gameObject.SetActive(false);
         }
     }
 

@@ -36,19 +36,19 @@ public class PlayerAnimations : MonoBehaviour {
                 //Player cannot use controls if is dead or has won
                 if (player.currentStatus != Player.Status.die && player.currentStatus != Player.Status.victory) {
                     player.Controls();
+
+                    //Fix Player Mesh Transform Rotation
+                    if ((Input.GetKey(player.rightKey) || Input.GetKey(player.rightKey2))) {
+                        newRotation.eulerAngles = new Vector3(newRotation.eulerAngles.x, 90, newRotation.eulerAngles.z);
+                        playerModel.transform.rotation = newRotation;
+
+                    }
+                    else if ((Input.GetKey(player.leftKey) || Input.GetKey(player.leftKey2))) {
+                        newRotation.eulerAngles = new Vector3(newRotation.eulerAngles.x, -90, newRotation.eulerAngles.z);
+                        playerModel.transform.rotation = newRotation;
+                    }
                 }
                 GetComponent<Animation>().Play(player.currentStatus.ToString());
-
-                //Fix Player Mesh Transform Rotation
-                if ((Input.GetKey(player.rightKey) || Input.GetKey(player.rightKey2))) {
-                    newRotation.eulerAngles = new Vector3(newRotation.eulerAngles.x, 90, newRotation.eulerAngles.z);
-                    playerModel.transform.rotation = newRotation;
-
-                }
-                else if ((Input.GetKey(player.leftKey) || Input.GetKey(player.leftKey2))) {
-                    newRotation.eulerAngles = new Vector3(newRotation.eulerAngles.x, -90, newRotation.eulerAngles.z);
-                    playerModel.transform.rotation = newRotation;
-                }
             }
         }
         else {
