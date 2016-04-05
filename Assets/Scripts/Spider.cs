@@ -40,7 +40,7 @@ public class Spider : MonoBehaviour {
         if (!GetComponent<Animation>().IsPlaying(Status.die.ToString())) {
             if (!GetComponent<Animation>().IsPlaying(Status.attack.ToString()) &&
                 !GetComponent<Animation>().IsPlaying(Status.hit.ToString())) {
-                if (aimEnemy()) {
+                if (aimPlayer()) {
                     currentStatus = Status.taunt;
                 }
                 else {
@@ -53,12 +53,14 @@ public class Spider : MonoBehaviour {
         else {
             AnimationState state = GetComponent<Animation>()["die"];
             if (state.time > state.length) {
+                GameObject player = GameObject.FindWithTag("Player");
+                player.SendMessage("getKill", SendMessageOptions.DontRequireReceiver);
                 Destroy(myTransform.parent.gameObject);
             }
         }
     }
 
-    bool aimEnemy() {
+    bool aimPlayer() {
         //Raycast Detection
         RaycastHit hit;
         Vector3 aim = new Vector3(Mathf.Sign(transform.rotation.y), 0, 0);
@@ -88,9 +90,20 @@ public class Spider : MonoBehaviour {
         enemy.SendMessage("TakeDamage", damage, SendMessageOptions.DontRequireReceiver);
     }
 
+    void OnTriggerEnter(Collider collidingObject) {
+        //If collidingObject is an action object (in this case, another enemy)
+        //Solution: Try to walk to another patrol point
+        if (collidingObject.gameObject.tag == "Action") {
+            if(currentPatrolPoint == patrolPoints.Length - 1)
+                currentPatrolPoint = 0;
+            else
+                currentPatrolPoint++;
+        }
+    }                
+
     void OnTriggerStay(Collider collidingObject) {
         //If collidingObject is an action object
-        if (collidingObject.gameObject.tag == "Player" && !inCooldown && currentStatus != Status.die && currentStatus != Status.hit) {
+        if (aimPlayer() && collidingObject.gameObject.tag == "Player" && !inCooldown && currentStatus != Status.die && currentStatus != Status.hit) {
             Attack(collidingObject.gameObject);
         }
     }

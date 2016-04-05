@@ -33,7 +33,8 @@ public class PlayerAnimations : MonoBehaviour {
                 return;
             }
             if (!GetComponent<Animation>().IsPlaying(Player.Status.attack.ToString())) {
-                if (player.currentStatus != Player.Status.die) {
+                //Player cannot use controls if is dead or has won
+                if (player.currentStatus != Player.Status.die && player.currentStatus != Player.Status.victory) {
                     player.Controls();
                 }
                 GetComponent<Animation>().Play(player.currentStatus.ToString());

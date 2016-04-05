@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour {
 
     //Player animation status
-    public enum Status {idle, walk, run, charge, attack, idlebattle, die};
+    public enum Status {idle, walk, run, charge, attack, idlebattle, die, victory};
     public Status currentStatus;
 
 	private Transform myTransform;
@@ -66,7 +66,7 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (currentHP <= 0) {
-            lose();
+            Lose();
         }
 
         //Fade damageImage
@@ -74,8 +74,7 @@ public class Player : MonoBehaviour {
             damageImage.color = Color.Lerp(damageImage.color, Color.clear, damageFade * Time.deltaTime);
         }
 
-        if (Time.timeScale == 0f && Input.GetKeyDown(restartKey)) {
-            Time.timeScale = 1f;
+        if (currentStatus == Status.victory && Input.GetKeyDown(restartKey)) {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 	}
@@ -181,20 +180,15 @@ public class Player : MonoBehaviour {
     }
 
     //Called by external game objects
-    public void win() {
-        //GameObject.FindGameObjectWithTag("Finish").GetComponent<Light>().color = new Vector4(1, 1, 1, 1);
-        ActionText.text = "You stopped the machines! You won! Press " + restartKey + " to play again.";
+    public void Win() {
+        currentStatus = Status.victory;
+        ActionText.text = "You found the treasure! You won! Press " + restartKey + " to play again.";
         ActionText.gameObject.SetActive(true);
-        AudioSource.PlayClipAtPoint(winSound, transform.position);
-        Time.timeScale = 0f;
+        //AudioSource.PlayClipAtPoint(winSound, transform.position);
     }
 
-    public void lose() {
+    public void Lose() {
         currentStatus = Status.die;
-        //Actiontext.text = "you died! maybe someone else will stop the machines... press " + restartkey + " to play again.";
-        //actiontext.gameobject.setactive(true);
-        //audiosource.playclipatpoint(losesound, transform.position);
-        //time.timeScale = 0f;
     }
 
     //Platform parenting - Keep player parented to moving platforms
