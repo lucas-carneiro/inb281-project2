@@ -110,7 +110,12 @@ public class Spider : MonoBehaviour {
 
     //Called by external game objects
     public void Act() {
-        TakeDamage(maxHP / 4);
+        if (aimPlayer()) {
+            TakeDamage(maxHP / 4);
+        }
+        else { //OHKO from behind (weak spot)
+            TakeDamage(maxHP);
+        }
     }
 
     void TakeDamage(float damage) {

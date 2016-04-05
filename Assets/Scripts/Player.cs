@@ -19,8 +19,7 @@ public class Player : MonoBehaviour {
     public float maxHP = 50f;
     private float currentHP;
 
-    public float jumpCooldown = 0.1f;
-    public float attackCooldown = 0.1f;
+    public float cooldown = 0.1f;
     private bool hasAttacked;
     private bool inCooldown;
     private float cooldownRemaining;
@@ -105,7 +104,7 @@ public class Player : MonoBehaviour {
 		}        
 
         if (inCooldown) {
-            cooldownRemaining -= jumpCooldown * Time.deltaTime;
+            cooldownRemaining -= Time.deltaTime;
             inCooldown = cooldownRemaining > 0f;
             if (!inCooldown) {
                 cooldownRemaining = 0f;
@@ -113,16 +112,18 @@ public class Player : MonoBehaviour {
         }
         else if (CheckGrounded()){
             //Jump
-            if (Input.GetKey(jumpKey) || Input.GetKey(jumpKey2)) {
+            if (Input.GetKeyDown(jumpKey) || Input.GetKeyDown(jumpKey2)) {
                 hasAttacked = false;
                 myTransform.GetComponent<Rigidbody>().AddForce(0, jumpForce, 0);
                 inCooldown = true;
-                cooldownRemaining = jumpCooldown;
+                cooldownRemaining = cooldown;
             }
             //Attack
-            if (Input.GetKey(attackKey) || Input.GetKey(attackKey2)) {
+            if (Input.GetKeyDown(attackKey) || Input.GetKeyDown(attackKey2)) {
                 currentStatus = Status.attack;
                 hasAttacked = true;
+                inCooldown = true;
+                cooldownRemaining = cooldown;
             }
         }
 
@@ -136,9 +137,27 @@ public class Player : MonoBehaviour {
 		return Physics.Raycast(myTransform.position, -Vector3.up, distToGround + 0.1f);
 	}
 
+    void OnTriggerEnter(Collider collidingObject) {
+        //If collidingObject is an action object
+        if (currentStatus != Status.die && collidingObject.gameObject.tag == "Action") {
+            if (Input.GetKeyDown(actionKey)) {
+                collidingObject.gameObject.SendMessage("Act", SendMessageOptions.DontRequireReceiver);
+            }
+        }
+    }
+
     void OnTriggerStay(Collider collidingObject) {
         //If collidingObject is an action object
-        if (currentStatus == Status.attack && collidingObject.gameObject.tag == "Action") {
+        if (currentStatus != Status.die && collidingObject.gameObject.tag == "Action") {
+            if (Input.GetKeyDown(actionKey)) {
+                collidingObject.gameObject.SendMessage("Act", SendMessageOptions.DontRequireReceiver);
+            }
+        }
+    }
+
+    void OnTriggerExit(Collider collidingObject) {
+        //If collidingObject is an action object
+        if (currentStatus != Status.die && collidingObject.gameObject.tag == "Action") {
             if (Input.GetKeyDown(actionKey)) {
                 collidingObject.gameObject.SendMessage("Act", SendMessageOptions.DontRequireReceiver);
             }
